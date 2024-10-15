@@ -141,9 +141,9 @@ class Turtle {
     let wadj = values[0];
     let hadj = values[1];
     let level = values[2];
-    let sw = values[3];
-    let strokeAlpha = values[4];
-    let fillAlpha = values[5];
+    // let sw = values[3];
+    // let strokeAlpha = values[4];
+    // let fillAlpha = values[5];
     let fractalAngle = values[6];
     let length = values[7];
     this.shapeValues = values.slice(-11);
