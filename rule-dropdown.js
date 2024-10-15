@@ -125,9 +125,6 @@ class RuleDropdown {
       case "fern3":
         this.currentFractal = this.lsystem.fern3;
         break;
-      // case "flower":
-      //   currentFractal = this.lsystem.flower;
-      //   break;
       case "island_curve":
         this.currentFractal = this.lsystem.island_curve;
         break;
@@ -158,9 +155,6 @@ class RuleDropdown {
       case "maze":
         this.currentFractal = this.lsystem.maze;
         break;
-      // case "notched_square":
-      //   currentFractal = this.lsystem.notched_square;
-      //   break;
       case "peano":
         this.currentFractal = this.lsystem.peano;
         break;
@@ -197,9 +191,6 @@ class RuleDropdown {
       case "rings":
         this.currentFractal = this.lsystem.rings;
         break;
-      // case "rounded_cross":
-      //   this.currentFractal = this.lsystem.rounded_cross;
-      //   break;
       case "rounded_star":
         this.currentFractal = this.lsystem.rounded_star;
         break;
