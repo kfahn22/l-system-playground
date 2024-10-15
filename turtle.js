@@ -55,27 +55,16 @@ class Turtle {
     this.sentence = nextSentence;
   }
 
-  turtle(params) {
-    let colorMode = params[0];
-    let shapeChoices = params[1];
-    let currentStrokePalette = params[2];
-    let currentFillPalette = params[3];
-   // let level = params[4];
-    let sw = params[5];
-    let strokeAlpha = params[6];
-    let fillAlpha = params[7];
-    let index = params[8];
-    let length = params[9];
+  turtle(params, colorParams) {
+    let shapeChoices = params[0];
+    let index = params[1];
+    let length = params[2];
+    let colorMode = params[3];
+
     for (let i = 0; i < this.sentence.length; i++) {
+      this.adjustFill(colorMode, colorParams);
       let current = this.sentence.charAt(i);
-      this.adjustFill(
-        colorMode,
-        currentStrokePalette,
-        currentFillPalette,
-        sw,
-        strokeAlpha,
-        fillAlpha
-      );
+      // Catch-all array for arcs, spirals, lissajous, zigzag
       let openShapes = ["Arc", "Cornu Spiral", "Lissajous", "Spiral", "Zigzag"];
       if (current === "F") {
         // Draw the shape/word on the canvas
@@ -126,76 +115,15 @@ class Turtle {
       } else if (current == "{") {
         beginShape();
       } else if (current == "}") {
+        let fillAlpha = colorParams[4];
+        let fillPalette = colorParams[3];
+        let c = random(fillPalette);
+        c[3] = fillAlpha;
         noStroke();
-        fill(random(this.fillPalette));
+        fill(c);
         endShape();
       }
     }
-  }
-
-  // When both stroke and fill are used, they are rendered separately
-  addLsystemStrokeFill(
-    lsystemData,
-    shapeChoices,
-    currentStrokePalette,
-    currentFillPalette,
-    sliderValues,
-    index,
-    ruleChoices
-  ) {
-    let values = sliderValues[index];
-    let wadj = values[0];
-    let hadj = values[1];
-    let level = values[2];
-    let fractalAngle = values[6];
-    let params = [];
-    params.push(1); // colorMode
-    params.push(shapeChoices);
-    params.push(currentStrokePalette);
-    params.push(currentFillPalette);
-    params.push(values[2]); // level
-    params.push(values[3]); // sw
-    params.push(values[4]); // strokeAlpha
-    params.push(values[5]); // fillAlpha
-    params.push(index);
-    params.push(values[7]); // length
-    this.setRule(lsystemData);
-    this.shapeValues = values.slice(-10);
-    push();
-    this.shape_ui.selectShape(shapeChoices[index], this.shapeValues);
-    this.shape = this.shape_ui.shape;
-    this.shape_messages.push(this.shape_ui.message);
-    translate(width * wadj, height * hadj);
-    rotate(fractalAngle);
-    // I have imposed some limits on the level to keep the sketch from freezing
-    if (level > this.maxLevel) {
-      this.addWarning = true;
-      params[4] = this.maxLevel;
-      this.levelWarning(
-        params,
-        index, // index of lsystem
-        ruleChoices
-      );
-    } else {
-      this.ruleWarnings[index] = null;
-      this.render(params);
-    }
-    pop();
-    // We need to reset sentence else the level is doubled
-    this.setRule(lsystemData);
-    params[0] = 0; // Set colorMode to 0 to add stroke after fill
-    push();
-    translate(width * wadj, height * hadj);
-    rotate(fractalAngle);
-
-    if (level > this.maxLevel) {
-      params[4] = this.maxLevel;
-      this.levelWarning(params, index, ruleChoices);
-    } else {
-      this.ruleWarnings[index] = null;
-      this.render(params);
-    }
-    pop();
   }
 
   addLsystem(
@@ -213,19 +141,25 @@ class Turtle {
     let wadj = values[0];
     let hadj = values[1];
     let level = values[2];
+    let sw = values[3];
+    let strokeAlpha = values[4];
+    let fillAlpha = values[5];
     let fractalAngle = values[6];
-    this.shapeValues = values.slice(-10);
+    let length = values[7];
+    this.shapeValues = values.slice(-11);
+    // We will send some values to the render/turtle functions
     let params = [];
-    params.push(colorMode);
+    params.push(level);
     params.push(shapeChoices);
-    params.push(currentStrokePalette);
-    params.push(currentFillPalette);
-    params.push(values[2]); // level
-    params.push(values[3]); // sw
-    params.push(values[4]); // strokeAlpha
-    params.push(values[5]); // fillAlpha
-    params.push(index);
-    params.push(values[7]); // length
+    params.push(index); //2
+    params.push(length);
+    params.push(colorMode);
+    let colorParams = [];
+    colorParams.push(currentStrokePalette);
+    colorParams.push(values[3]); // sw
+    colorParams.push(values[4]); // strokeAlpha
+    colorParams.push(currentFillPalette);
+    colorParams.push(values[5]); // fillAlpha
 
     this.shape_ui.selectShape(shapeChoices[index], this.shapeValues);
     this.shape = this.shape_ui.shape;
@@ -233,21 +167,53 @@ class Turtle {
     push();
     translate(width * wadj, height * hadj);
     rotate(fractalAngle);
-    if (colorMode != null) {
+    if (colorMode != 2) {
       if (level > this.maxLevel) {
-        params[4] = this.maxLevel;
-        this.levelWarning(params, index, ruleChoices);
+        params[0] = this.maxLevel;
+        this.levelWarning(params, colorParams, ruleChoices);
       } else {
-        this.render(params);
+        this.render(params, colorParams);
+      }
+      pop();
+    } else {
+      // With both stroke and fill, add stroke after fill so stroke doesn't show through fill (when alpha < 255)
+      //this.setFill(currentFillPalette, fillAlpha);
+      params[4] = 1; // Set colorMode to fill shape
+      if (level > this.maxLevel) {
+        this.addWarning = true;
+        params[0] = this.maxLevel;
+        this.levelWarning(params, colorParams, ruleChoices);
+      } else {
+        this.ruleWarnings[index] = null;
+        this.render(params, colorParams);
+      }
+      pop();
+      // We need to reset sentence so level is not doubled
+      this.setRule(lsystemData);
+      params[4] = 0; // Set colorMode to 0 to add stroke after fill
+      push();
+      translate(width * wadj, height * hadj);
+      rotate(fractalAngle);
+      //this.setStroke(currentStrokePalette, sw, strokeAlpha);
+      if (level > this.maxLevel) {
+        params[0] = this.maxLevel;
+        this.levelWarning(params, colorParams, ruleChoices);
+      } else {
+        this.ruleWarnings[index] = null;
+        this.render(params, colorParams);
       }
       pop();
     }
+
+    // If the "shape" is not a shape but text it is added differently
     if (shapeChoices[index] == "Word") {
       this.addText(currentFillPalette);
     }
   }
 
-  levelWarning(params, index, ruleChoices) {
+  // Add warnings if level gets too high for certain rulesets so sketch doesn't freeze
+  levelWarning(params, colorParams, ruleChoices) {
+    let index = params[2];
     let warning =
       "The level can't be > " +
       `${this.maxLevel}` +
@@ -255,30 +221,16 @@ class Turtle {
       `${ruleChoices[index]}` +
       " rulset.";
     this.ruleWarnings[index] = warning;
-    this.render(params);
+    this.render(params, colorParams);
   }
 
-  render(params) {
-    let level = params[4];
+  render(params, colorParams) {
+    let level = params[0];
+    let turtleParams = params.slice(-4);
     for (let i = 0; i < level; i++) {
       this.generate();
     }
-    this.turtle(params);
-  }
-
-  adjustFill(
-    colorMode,
-    currentStrokePalette,
-    currentFillPalette,
-    sw,
-    strokeAlpha,
-    fillAlpha
-  ) {
-    if (colorMode == 0) {
-      this.setStroke(currentStrokePalette, sw, strokeAlpha);
-    } else if (colorMode == 1) {
-      this.setFill(currentFillPalette, fillAlpha);
-    }
+    this.turtle(turtleParams, colorParams);
   }
 
   setFill(fillPalette, fillAlpha) {
@@ -295,6 +247,21 @@ class Turtle {
     noFill();
     strokeWeight(sw);
     stroke(sp);
+  }
+
+  adjustFill(colorMode, colorParams) {
+    let strokePalette = colorParams[0];
+    let sw = colorParams[1];
+    let strokeAlpha = colorParams[2];
+    let fillPalette = colorParams[3];
+    let fillAlpha = colorParams[4];
+    if (colorMode == 0) {
+      this.setStroke(strokePalette, sw, strokeAlpha);
+    } else if (colorMode == 1) {
+      this.setFill(fillPalette, fillAlpha);
+      // } else if (colorMode == 2) {
+      //   this.setFill(fillPalette, fillAlpha);
+    }
   }
 
   addText(fillPalette) {

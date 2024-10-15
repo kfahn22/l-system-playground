@@ -1,25 +1,21 @@
 class AddControls {
-  constructor(pos, sliderValues, rulesetData, ruleChoice, shapeChoice) {
-    this.backgroundDropdown = new PaletteDropdown(
-      pos,
-      145,
-      "black",
-      "Background Color"
-    );
-    this.backgrounddropdown = this.backgroundDropdown.dropdown;
+  constructor(
+    pos,
+    sliderValues,
+    rulesetData,
+    ruleChoice,
+    shapeChoice,
+    strokeChoice,
+    fillChoice
+  ) {
     this.strokeDropdown = new PaletteDropdown(
       pos,
-      200,
-      "orange",
+      145,
+      strokeChoice,
       "Stroke Color"
     );
     this.strokedropdown = this.strokeDropdown.dropdown;
-    this.fillDropdown = new PaletteDropdown(
-      pos,
-      255,
-      "purplePalette",
-      "Fill Color"
-    );
+    this.fillDropdown = new PaletteDropdown(pos, 200, fillChoice, "Fill Color");
     this.filldropdown = this.fillDropdown.dropdown;
     // Create an instance of the SliderGroup class
     this.sliderGroup = new SliderGroup(
@@ -39,8 +35,9 @@ class AddControls {
       sliderValues[13], // n1
       sliderValues[14], // n2
       sliderValues[15], // n3
-      sliderValues[16], // n
-      sliderValues[17]
+      sliderValues[16], // n,
+      sliderValues[17], // d
+      sliderValues[18]
     ); // shape angle
     this.sliders = this.sliderGroup.sliders;
     this.sliderValues = this.sliderGroup.getValues();
@@ -56,8 +53,6 @@ class AddControls {
       "L-system Ruleset"
     );
     this.rulesetDropdown = this.ruleset.dropdown;
-    // this.resetButton = createButton("Reset");
-    // this.resetButton.position(pos, 300);
     // Checkbox to determine whether shapes have stroke
     this.addStroke = createCheckbox("Add stroke", true);
     this.addStroke.position(pos, 335);
@@ -69,26 +64,21 @@ class AddControls {
     // Whether to add P5 Grain library
     // Will slow down the render so I recommend keeping to false most of the time
     this.addP5Grain = createCheckbox("Add p5.Grain", false);
-    this.addP5Grain.position(pos, 405);
+    this.addP5Grain.position(10, 405);
     this.addP5Grain.style("color", "white");
-  this.removeRuleset = createCheckbox("Remove ruleset", false);
-  this.removeRuleset.position(1150, 450);
-  this.removeRuleset.style("color", "white");
+    this.removeRuleset = createCheckbox("Remove second ruleset", false);
+    this.removeRuleset.position(900, 10);
+    this.removeRuleset.style("color", "white");
 
     // Ensure checkboxes reflect initial values
     //this.updateCheckboxes();
     this.values = [];
   }
 
-  setPalettes(background, stroke, fill) {
-    this.backgroundDropdown.setPalette(background);
+  setPalettes(stroke, fill) {
     this.strokeDropdown.setPalette(stroke);
     this.fillDropdown.setPalette(fill);
-    return [
-      this.backgroundDropdown.palette,
-      this.strokeDropdown.palette,
-      this.fillDropdown.palette,
-    ];
+    return [this.strokeDropdown.palette, this.fillDropdown.palette];
   }
 
   // This isn't working -- not sure why
@@ -114,7 +104,6 @@ class AddControls {
     return [
       this.rulesetDropdown,
       this.shapeDropdown,
-      this.backgrounddropdown,
       this.strokedropdown,
       this.filldropdown,
     ];
@@ -125,7 +114,12 @@ class AddControls {
   }
 
   returnCheckboxes() {
-    return [this.addStroke, this.fillShape, this.addP5Grain, this.removeRuleset];
+    return [
+      this.addStroke,
+      this.fillShape,
+      this.addP5Grain,
+      this.removeRuleset,
+    ];
   }
 
   // Get values from dropdowns, checkboxes, and sliders
@@ -133,12 +127,11 @@ class AddControls {
     this.values = [];
     this.values[0] = this.rulesetDropdown.selected();
     this.values[1] = this.shapeDropdown.selected();
-    this.values[2] = this.backgrounddropdown.selected();
-    this.values[3] = this.strokedropdown.selected();
-    this.values[4] = this.filldropdown.selected();
-    this.values[5] = this.addStroke.checked();
-    this.values[6] = this.fillShape.checked();
-    this.values[7] = this.addP5Grain.checked();
+    this.values[2] = this.strokedropdown.selected();
+    this.values[3] = this.filldropdown.selected();
+    this.values[4] = this.addStroke.checked();
+    this.values[5] = this.fillShape.checked();
+    this.values[6] = this.addP5Grain.checked();
     let sliderValues = this.sliderGroup.getValues();
     this.sliderGroup.updateLabels();
     for (let s of sliderValues) {
