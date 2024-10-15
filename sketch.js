@@ -11,6 +11,7 @@ let backgroundDropdown;
 let syncVariables; // checkbox for whether the same translation and length variables are used for both Lsystems
 let sliderPos = 0;
 let dropdownPos = 180;
+let canvasPos = 350;
 
 // Array to store dropdowns, sliderGroup, sliders, checkBoxes
 let lsystem0;
@@ -84,7 +85,7 @@ function preload() {
 
 function setup() {
   canvas = createCanvas(800, 800);
-  canvas.position(360, 95);
+  canvas.position(canvasPos, 100);
   canvas.id("mycanvas");
   p5grain.setup();
 
@@ -99,7 +100,7 @@ function setup() {
     "Use the same translation and length variables",
     true
   );
-  syncVariables.position(360, 10);
+  syncVariables.position(canvasPos, 10);
   syncVariables.style("color", "white");
 
   lsystems.push(
@@ -313,7 +314,7 @@ function addMessages(shapeMessages, warnings) {
   } else addMessage = false;
 
   shapeMessage = createP(message);
-  shapeMessage.position(360, 30);
+  shapeMessage.position(canvasPos, 30);
   shapeMessage.addClass("p");
 
   if (addMessage) {
@@ -327,7 +328,7 @@ function addMessages(shapeMessages, warnings) {
   } else addWarning = false;
 
   ruleWarning = createP(warning);
-  ruleWarning.position(360, 60);
+  ruleWarning.position(canvasPos, 60);
   ruleWarning.addClass("p");
 
   if (addWarning) {
