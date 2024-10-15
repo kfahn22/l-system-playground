@@ -1,9 +1,6 @@
 // https://github.com/kfahn22/L-System-Pattern-Generator
 // https://editor.p5js.org/kfahn/sketches/KmKxgvx03
 
-// https://github.com/kfahn22/L-System-Pattern-Generator
-// https://editor.p5js.org/kfahn/sketches/KmKxgvx03
-
 // Lsystem data from rules.json
 let rulesetData;
 
@@ -12,6 +9,8 @@ let images = [];
 
 let backgroundDropdown;
 let syncVariables; // checkbox for whether the same translation and length variables are used for both Lsystems
+let sliderPos = 0;
+let dropdownPos = 180;
 
 // Array to store dropdowns, sliderGroup, sliders, checkBoxes
 let lsystem0;
@@ -20,7 +19,7 @@ let shapeChoice0 = "Flower";
 let strokeChoice0 = "orange";
 let fillChoice0 = "purplePalette";
 let sliderValues0 = [
-  175,
+  sliderPos,
   0.05, // wadj
   0.5, // hadj
   3, // level
@@ -79,7 +78,7 @@ let addp5Grain = []; // checkbox re whether to add p5grain, default false
 function preload() {
   rulesetData = loadJSON("rules.json");
   for (let i = 0; i < 7; i++) {
-    images[i] = loadImage(`${i}.png`);
+    images[i] = loadImage(`${path}/${i}.png`);
   }
 }
 
@@ -90,7 +89,7 @@ function setup() {
   p5grain.setup();
 
   backgroundDropdown = new PaletteDropdown(
-    10,
+    dropdownPos,
     260,
     "black",
     "Background Color"
@@ -105,7 +104,7 @@ function setup() {
 
   lsystems.push(
     addLsystem(
-      10,
+      dropdownPos,
       sliderValues0,
       ruleChoice0,
       shapeChoice0,

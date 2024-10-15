@@ -64,7 +64,7 @@ class AddControls {
     // Whether to add P5 Grain library
     // Will slow down the render so I recommend keeping to false most of the time
     this.addP5Grain = createCheckbox("Add p5.Grain", false);
-    this.addP5Grain.position(10, 405);
+    this.addP5Grain.position(180, 405);
     this.addP5Grain.style("color", "white");
     this.removeRuleset = createCheckbox("Remove second ruleset", false);
     this.removeRuleset.position(900, 10);
