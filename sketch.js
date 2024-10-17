@@ -9,6 +9,7 @@ let images = [];
 
 let backgroundDropdown;
 let syncVariables; // checkbox for whether the same translation and length variables are used for both Lsystems
+
 let sliderPos = 0;
 let dropdownPos = 180;
 let canvasPos = 350;
@@ -79,7 +80,7 @@ let addp5Grain = []; // checkbox re whether to add p5grain, default false
 function preload() {
   rulesetData = loadJSON("rules.json");
   for (let i = 0; i < 7; i++) {
-    images[i] = loadImage(`${path}/${i}.png`);
+    images[i] = loadImage(`${i}.png`);
   }
 }
 
@@ -271,7 +272,6 @@ function setSystemVariables(lsystems) {
       lsystemValues[1][0][9] = lsystemValues[0][0][9];
       lsystemValues[1][0][15] = lsystemValues[0][0][15];
     }
-    //console.log(lsystemValues);
 
     // Get Shape data
     sliderValues.push(lsystemValues[i][0].slice(-18)); // -18

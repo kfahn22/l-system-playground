@@ -25,6 +25,7 @@ class Turtle {
     this.addWarning;
     this.ruleWarnings = [null, null];
     this.images = images;
+    this.length;
   }
 
   setRule(pattern) {
@@ -58,9 +59,7 @@ class Turtle {
   turtle(params, colorParams) {
     let shapeChoices = params[0];
     let index = params[1];
-    let length = params[2];
     let colorMode = params[3];
-
     for (let i = 0; i < this.sentence.length; i++) {
       this.adjustFill(colorMode, colorParams);
       let current = this.sentence.charAt(i);
@@ -77,9 +76,9 @@ class Turtle {
         } else {
           this.shape.show();
         }
-        translate(length, 0);
+        translate(this.length, 0);
       } else if (current === "f") {
-        translate(length, 0);
+        translate(this.length, 0);
       } else if (current === "+") {
         rotate(this.angle);
       } else if (current === "-") {
@@ -91,17 +90,20 @@ class Turtle {
       } else if (current == ">") {
         if (shapeChoices[index] != "Image" && shapeChoices[index] != "Text") {
           push();
-          //this.values[15] = this.values[15] * this.lf;
-          length = length * this.lf;
-          this.shape_ui.selectShape(this.shapeValues);
+          this.length = this.length * this.lf;
+          // We need to update length and recall selectShape
+          this.shapeValues[0] = this.length;
+          this.shape_ui.selectShape(shapeChoices[index], this.shapeValues);
+          this.shape = this.shape_ui.shape;
           pop();
         }
       } else if (current == "<") {
         if (shapeChoices[index] != "Image" && shapeChoices[index] != "Text") {
           push();
-          //this.values[15] = this.values[15] / this.lf;
-          length = length / this.lf;
-          this.shape_ui.selectShape(this.shapeValues);
+          this.length = this.length / this.lf;
+          this.shapeValues[0] = this.length;
+          this.shape_ui.selectShape(shapeChoices[index], this.shapeValues);
+          this.shape = this.shape_ui.shape;
           pop();
         }
       } else if (current == "(") {
@@ -141,12 +143,10 @@ class Turtle {
     let wadj = values[0];
     let hadj = values[1];
     let level = values[2];
-    // let sw = values[3];
-    // let strokeAlpha = values[4];
-    // let fillAlpha = values[5];
     let fractalAngle = values[6];
-    let length = values[7];
+    this.length = values[7];
     this.shapeValues = values.slice(-11);
+
     // We will send some values to the render/turtle functions
     let params = [];
     params.push(level);
@@ -166,7 +166,7 @@ class Turtle {
     this.shape_messages.push(this.shape_ui.message);
     push();
     translate(width * wadj, height * hadj);
-    rotate(fractalAngle);
+    rotate(radians(fractalAngle));
     if (colorMode != 2) {
       if (level > this.maxLevel) {
         params[0] = this.maxLevel;
@@ -193,7 +193,7 @@ class Turtle {
       params[4] = 0; // Set colorMode to 0 to add stroke after fill
       push();
       translate(width * wadj, height * hadj);
-      rotate(fractalAngle);
+      rotate(radians(fractalAngle));
       //this.setStroke(currentStrokePalette, sw, strokeAlpha);
       if (level > this.maxLevel) {
         params[0] = this.maxLevel;
