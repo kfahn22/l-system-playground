@@ -180,10 +180,10 @@ class ShapeUI {
       case "Quadrifolium":
         this.shape.quadrifolium();
         break;
-      case "Quadrilateral":
-        this.shape.quadrilaterial();
+      case "Polygon":
+        this.shape.polygon();
         this.addMessage = true;
-        this.message = "The quadrilaterial curve is a f(m).";
+        this.message = "The polygon curve is a f(m).";
         break;
       case "Rose":
         this.shape.rose();
