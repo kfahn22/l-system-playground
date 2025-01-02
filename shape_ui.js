@@ -29,6 +29,8 @@ class ShapeUI {
       "Craniod",
       "Deltoid",
       "Eight",
+      "Fish",
+      "Flower",
       "Gear",
       "Image",
       "Heart",
@@ -41,12 +43,11 @@ class ShapeUI {
       "Quadrifolium",
       "Quadrilateral",
       "Rose",
-      "Flower",
       "Spiral",
       "Superellipse",
       "Supershape",
       "Tear Drop",
-      "Windmill",
+      // "Windmill",
       "Word",
       "Zigzag",
     ];
@@ -135,6 +136,9 @@ class ShapeUI {
       case "Eight":
         this.shape.eight();
         break;
+      case "Fish":
+        this.shape.fish();
+        break;
       case "Flower":
         // I have added a constraint on the value of b to keep the sketch from freezing
         this.shape.flower();
@@ -207,6 +211,11 @@ class ShapeUI {
         break;
       case "Tear Drop":
         this.shape.tearDrop();
+        this.addMessage = true;
+        this.message = "The windmill is a f(a, m)";
+        break;
+      case "Windmill":
+        this.shape.windmill();
         break;
       case "Word":
         break;
