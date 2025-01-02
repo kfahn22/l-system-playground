@@ -158,6 +158,14 @@ class Shape {
     }
     return sum;
   }
+  clover() {
+    for (let theta = 0; theta < TWO_PI; theta += 0.05) {
+      let r = 1 + cos(this.m * theta) + pow(sin(this.m * theta), 2);
+      let x = this.r * r * cos(theta);
+      let y = this.r * r * sin(theta);
+      this.points.push(createVector(x, y));
+    }
+  }
 
   cornuSpiral() {
     let numPoints = 200;
@@ -201,6 +209,16 @@ class Shape {
     for (let theta = 0; theta < TWO_PI; theta += 0.05) {
       let x = this.r * a * sin(theta);
       let y = this.r * a * sin(theta) * cos(theta);
+      this.points.push(createVector(x, y));
+    }
+  }
+
+  //https://mathcurve.com/courbes2d.gb/poisson/poisson.shtml
+  // https://mathcurve.com/courbes2d.gb/poisson/poisson.shtml
+  fish() {
+    for (let theta = -TWO_PI; theta < TWO_PI; theta += 0.05) {
+      let x = this.r * 0.75 * (cos(theta) + 2 * 2 * cos(theta / 2));
+      let y = this.r * 1.0 * sin(theta);
       this.points.push(createVector(x, y));
     }
   }
@@ -418,6 +436,16 @@ class Shape {
     for (let theta = 0; theta < TWO_PI; theta += 0.1) {
       let x = this.r * cos(theta);
       let y = this.r * sin(theta) * pow(sin(theta / 2), n);
+      this.points.push(createVector(x, y));
+    }
+  }
+
+  //https://mathcurve.com/courbes2d.gb/moulinavent/moulinavent.shtml
+  windmill() {
+    for (let theta = 0; theta < 2 * PI; theta += 0.01) {
+      let r = abs(this.m * tan(2 * theta)) + this.a;
+      let x = this.r * r * cos(theta);
+      let y = this.r * r * sin(theta);
       this.points.push(createVector(x, y));
     }
   }
